@@ -1,3 +1,4 @@
+import 'package:expense_tracker/Models/TransactionModel.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -30,6 +31,19 @@ class MyHomePage extends StatelessWidget {
 
   MyHomePage(this._title);
 
+  var transactions = [
+    TransactionModel(id: "T1", title: "Tran1", amount: 1, date: DateTime.now()),
+    TransactionModel(id: "T2", title: "Tran2", amount: 2, date: DateTime.now())
+  ];
+
+  List<Card> getTransactionList() {
+    return transactions.map((item) {
+      return Card(
+        child: Text(item.title),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,18 +51,8 @@ class MyHomePage extends StatelessWidget {
         title: Text(_title),
       ),
       body: Column(
-        children: <Widget>[
-          Container(
-            width: double.infinity,
-            child: Card(
-              child: Text("CHART!"),
-              elevation: 5,
-            ),
-          ),
-          Card(
-            child: Container(child: Text("Anoter!")),
-          )
-        ],
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: getTransactionList(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
