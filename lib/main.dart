@@ -1,6 +1,8 @@
 import 'package:expense_tracker/Models/TransactionModel.dart';
 import 'package:flutter/material.dart';
 
+import './Components/TransactionRow.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -31,17 +33,19 @@ class MyHomePage extends StatelessWidget {
 
   MyHomePage(this._title);
 
-  var transactions = [
-    TransactionModel(id: "T1", title: "Tran1", amount: 1, date: DateTime.now()),
-    TransactionModel(id: "T2", title: "Tran2", amount: 2, date: DateTime.now())
+  final transactions = [
+    TransactionModel(
+        id: "T1", title: "Tran1", amount: 1.0, date: DateTime.now()),
+    TransactionModel(
+        id: "T2", title: "Tran2", amount: 2.0, date: DateTime.now())
   ];
 
-  List<Card> getTransactionList() {
+  List<TransactionRow> getTransactionList() {
     return transactions.map((item) {
-      return Card(
-        child: Text(item.title),
+      return TransactionRow(
+        transactionModel: item,
       );
-    });
+    }).toList();
   }
 
   @override
@@ -51,7 +55,6 @@ class MyHomePage extends StatelessWidget {
         title: Text(_title),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: getTransactionList(),
       ),
       floatingActionButton: FloatingActionButton(

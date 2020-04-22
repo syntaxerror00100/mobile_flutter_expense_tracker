@@ -6,5 +6,9 @@ class TransactionModel {
   final double amount;
   final DateTime date;
 
-  TransactionModel({@required this.id, this.title, this.amount, this.date});
+  TransactionModel(
+      {@required this.id,
+      @required this.title,
+      @required this.amount,
+      @required this.date});
 }
