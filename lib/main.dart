@@ -2,38 +2,18 @@ import 'package:expense_tracker/Models/TransactionModel.dart';
 import 'package:flutter/material.dart';
 
 import './Components/TransactionRow.dart';
+import 'Components/NewTransactionForm.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage('Flutter Demo Home Page'),
-    );
-  }
+  _MyAppState createState() => _MyAppState();
 }
 
-class MyHomePage extends StatelessWidget {
-  final String _title;
-
-  MyHomePage(this._title);
-
-  final transactions = [
+class _MyAppState extends State<MyApp> {
+  List<TransactionModel> transactions = [
     TransactionModel(
         id: "T1", title: "Tran1", amount: 1.0, date: DateTime.now()),
     TransactionModel(
@@ -48,19 +28,42 @@ class MyHomePage extends StatelessWidget {
     }).toList();
   }
 
+  void _addTransactionHandler(TransactionModel transactionModelObj) {
+    setState(() {
+      transactions.add(transactionModelObj);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_title),
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
-      body: Column(
-        children: getTransactionList(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Flutter Demo"),
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Card(
+              child: Text("Dashboard"),
+            ),
+            NewtransactionForm(
+              addTransactionHandler: _addTransactionHandler,
+            ),
+            Column(
+              children: <Widget>[...getTransactionList()],
+            )
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          tooltip: 'Increment',
+          child: Icon(Icons.add),
+        ),
       ),
     );
   }
