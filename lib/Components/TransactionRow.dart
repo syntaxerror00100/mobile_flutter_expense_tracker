@@ -11,6 +11,7 @@ class TransactionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 5,
       child: Row(
         children: <Widget>[
           Container(
