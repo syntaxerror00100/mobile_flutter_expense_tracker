@@ -21,6 +21,7 @@ class NewtransactionForm extends StatelessWidget {
         ),
         Card(
           child: TextField(
+              keyboardType: TextInputType.number,
               controller: _amountController,
               decoration: InputDecoration(
                   hintText: "Input Amount", labelText: "Amount")),
@@ -46,11 +47,19 @@ class NewtransactionForm extends StatelessWidget {
         RaisedButton(
           child: Text("Add transaction"),
           onPressed: () {
-            addTransactionHandler(new TransactionModel(
+            final String amount = _amountController.text;
+            final String title = _titleController.text;
+            final String date = _dateController.text;
+
+            if (title.isEmpty || amount.isEmpty || date.isEmpty) return;
+
+            var newTransaction = new TransactionModel(
                 id: DateTime.now().toString(),
-                title: _titleController.text,
-                amount: double.parse(_amountController.text),
-                date: DateTime.now()));
+                title: title,
+                amount: double.parse(amount),
+                date: DateTime.parse(date));
+
+            addTransactionHandler(newTransaction);
 
             // addTransactionHandler(new TransactionModel(
             //     id: '', title: 'xxx', amount: 123, date: DateTime.now()));

@@ -1,38 +1,23 @@
+import 'package:expense_tracker/Components/TransactionFormAndListContainer.dart';
 import 'package:expense_tracker/Models/TransactionModel.dart';
 import 'package:flutter/material.dart';
-
-import './Components/TransactionRow.dart';
-import 'Components/NewTransactionForm.dart';
+import './Components/TransactionFormAndListContainer.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
-  @override
-  _MyAppState createState() => _MyAppState();
-}
+// class MyApp extends StatefulWidget {
+//   // This widget is the root of your application.
+//   @override
+//   _MyAppState createState() => _MyAppState();
+// }
 
-class _MyAppState extends State<MyApp> {
-  List<TransactionModel> transactions = [
-    TransactionModel(
-        id: "T1", title: "Tran1", amount: 1.0, date: DateTime.now()),
-    TransactionModel(
-        id: "T2", title: "Tran2", amount: 2.0, date: DateTime.now())
-  ];
-
-  List<TransactionRow> getTransactionList() {
-    return transactions.map((item) {
-      return TransactionRow(
-        transactionModel: item,
-      );
-    }).toList();
-  }
-
-  void _addTransactionHandler(TransactionModel transactionModelObj) {
-    setState(() {
-      transactions.add(transactionModelObj);
-    });
-  }
+class MyApp extends StatelessWidget {
+  // List<TransactionModel> transactions = [
+  //   TransactionModel(
+  //       id: "T1", title: "Tran1", amount: 1.0, date: DateTime.now()),
+  //   TransactionModel(
+  //       id: "T2", title: "Tran2", amount: 2.0, date: DateTime.now())
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +36,7 @@ class _MyAppState extends State<MyApp> {
             Card(
               child: Text("Dashboard"),
             ),
-            NewtransactionForm(
-              addTransactionHandler: _addTransactionHandler,
-            ),
-            Column(
-              children: <Widget>[...getTransactionList()],
-            )
+            new TransactionFormAndList()
           ],
         ),
         floatingActionButton: FloatingActionButton(
