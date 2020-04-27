@@ -1,9 +1,23 @@
-import 'package:expense_tracker/Components/TransactionFormAndListContainer.dart';
 import 'package:expense_tracker/Models/TransactionModel.dart';
 import 'package:flutter/material.dart';
-import './Components/TransactionFormAndListContainer.dart';
+import './Components/NewTransactionForm.dart';
+import './Components/TransactinList.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MainAppEtnry());
+
+class MainAppEtnry extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Personal Expenses',
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        accentColor: Colors.amber,
+      ),
+      home: MyApp(),
+    );
+  }
+}
 
 // class MyApp extends StatefulWidget {
 //   // This widget is the root of your application.
@@ -11,7 +25,7 @@ void main() => runApp(MyApp());
 //   _MyAppState createState() => _MyAppState();
 // }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // List<TransactionModel> transactions = [
   //   TransactionModel(
   //       id: "T1", title: "Tran1", amount: 1.0, date: DateTime.now()),
@@ -20,30 +34,59 @@ class MyApp extends StatelessWidget {
   // ];
 
   @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final List<TransactionModel> _transactions = [];
+  void addTransactionHandler(TransactionModel tranObj, BuildContext ctx) {
+    setState(() {
+      _transactions.add(new TransactionModel(
+          id: tranObj.id,
+          title: tranObj.title,
+          amount: tranObj.amount,
+          date: tranObj.date));
+    });
+
+    Navigator.of(ctx).pop();
+  }
+
+  void _startAddTransaction(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (_) => new NewtransactionForm(
+            addTransactionHandler: this.addTransactionHandler));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Flutter Demo"),
+        actions: <Widget>[
+          FlatButton(
+            child: Text("Add"),
+            onPressed: () {
+              _startAddTransaction(context);
+            },
+          )
+        ],
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Flutter Demo"),
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
+      body: ListView(
+        children: <Widget>[
+          Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             Card(
               child: Text("Dashboard"),
             ),
-            new TransactionFormAndList()
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          tooltip: 'Increment',
-          child: Icon(Icons.add),
-        ),
+            new TransactionList(this._transactions)
+          ]),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          _startAddTransaction(context);
+        },
       ),
     );
   }
