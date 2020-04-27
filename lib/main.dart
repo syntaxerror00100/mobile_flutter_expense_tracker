@@ -1,7 +1,9 @@
+import 'package:expense_tracker/Components/Chart1.dart';
 import 'package:expense_tracker/Models/TransactionModel.dart';
 import 'package:flutter/material.dart';
 import './Components/NewTransactionForm.dart';
 import './Components/TransactinList.dart';
+import './Components/Chart1.dart';
 
 void main() => runApp(MainAppEtnry());
 
@@ -38,6 +40,24 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  _MyAppState() {
+    //INITIALIZE DUMMY DATA
+    for (int i = 0; i < 7; i++) {
+      final date = new DateTime.now().subtract(Duration(days: i));
+      _transactions.add(new TransactionModel(
+          id: i.toString(),
+          title: 'Dummy data $i',
+          amount: double.parse(i.toString()),
+          date: date));
+
+      _transactions.add(new TransactionModel(
+          id: i.toString(),
+          title: 'Another dummy data $i',
+          amount: double.parse((i + 2).toString()),
+          date: date));
+    }
+  }
+
   final List<TransactionModel> _transactions = [];
   void addTransactionHandler(TransactionModel tranObj, BuildContext ctx) {
     setState(() {
@@ -49,6 +69,13 @@ class _MyAppState extends State<MyApp> {
     });
 
     Navigator.of(ctx).pop();
+  }
+
+  List<TransactionModel> get recentTransactions {
+    return _transactions
+        .where(
+            (x) => x.date.isAfter(DateTime.now().subtract(Duration(days: 7))))
+        .toList();
   }
 
   void _startAddTransaction(BuildContext ctx) {
@@ -75,10 +102,14 @@ class _MyAppState extends State<MyApp> {
       body: ListView(
         children: <Widget>[
           Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-            Card(
-              child: Text("Dashboard"),
-            ),
-            new TransactionList(this._transactions)
+            new Chart1(recentTransactions),
+            _transactions.length > 0
+                ? new TransactionList(this._transactions)
+                : Card(
+                    elevation: 5,
+                    child: Container(
+                        margin: EdgeInsets.all(10),
+                        child: Text("No transactions yet")))
           ]),
         ],
       ),
