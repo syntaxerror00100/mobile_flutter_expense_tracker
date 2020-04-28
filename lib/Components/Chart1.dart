@@ -32,7 +32,7 @@ class Chart1 extends StatelessWidget {
         'amount': totalAmount,
         'percent': average
       };
-    });
+    }).reversed.toList();
   }
 
   double get transactionsTotalAmount {
@@ -59,6 +59,14 @@ class Chart1 extends StatelessWidget {
                 padding: EdgeInsets.all(5),
                 child: Column(
                   children: <Widget>[
+                    Container(
+                      width: 35,
+                      height: 14,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(item["amount"].toString()),
+                      ),
+                    ),
                     Flexible(
                       fit: FlexFit.tight,
                       child: FAProgressBar(

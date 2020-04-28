@@ -1,5 +1,6 @@
 import 'package:expense_tracker/Models/TransactionModel.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewtransactionForm extends StatefulWidget {
   final Function addTransactionHandler;
@@ -17,10 +18,12 @@ class _NewtransactionFormState extends State<NewtransactionForm> {
 
   final _dateController = TextEditingController();
 
+  var _selectedDate = "No date choosen";
+
   void _addTransaction(BuildContext ctx) {
     final String amount = _amountController.text;
     final String title = _titleController.text;
-    final String date = _dateController.text;
+    final String date = _selectedDate;
 
     if (title.isEmpty || amount.isEmpty || date.isEmpty) return;
 
@@ -35,46 +38,55 @@ class _NewtransactionFormState extends State<NewtransactionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Card(
-          child: TextField(
+    return Container(
+      padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
+      child: Column(
+        children: <Widget>[
+          TextField(
               controller: _titleController,
               decoration:
                   InputDecoration(hintText: "Input Title", labelText: "Title")),
-        ),
-        Card(
-          child: TextField(
+          TextField(
               onSubmitted: (_) => _addTransaction(context),
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               controller: _amountController,
               decoration: InputDecoration(
                   hintText: "Input Amount", labelText: "Amount")),
-        ),
-        Card(
-          child: TextField(
-              controller: _dateController,
-              readOnly: true,
-              onTap: () {
-                showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2050))
-                    .then((selectedDate) {
-                  if (selectedDate != null)
-                    _dateController.text = selectedDate.toString();
-                });
-              },
-              onSubmitted: (_) => _addTransaction(context),
-              decoration:
-                  InputDecoration(hintText: "Input Date", labelText: "Date")),
-        ),
-        RaisedButton(
-          child: Text("Add transaction"),
-          onPressed: () => _addTransaction(context),
-        )
-      ],
+          Row(
+            children: <Widget>[
+              Text(_selectedDate),
+              SizedBox(
+                width: 10,
+              ),
+              IconButton(
+                  icon: Icon(Icons.calendar_today),
+                  onPressed: () {
+                    showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2050))
+                        .then((selectedDate) {
+                      if (selectedDate != null)
+                        setState(() {
+                          _selectedDate = DateFormat.yMMMEd()
+                              .format(selectedDate)
+                              .toString(); // selectedDate.toString();
+                        });
+                    });
+                  })
+            ],
+          ),
+          RaisedButton(
+            child: Text(
+              "Add transaction",
+              style: TextStyle(color: Colors.white),
+            ),
+            color: Theme.of(context).primaryColor,
+            onPressed: () => _addTransaction(context),
+          )
+        ],
+      ),
     );
   }
 }
