@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
       _transactions.add(new TransactionModel(
           id: i.toString(),
           title: 'Another dummy data $i',
-          amount: double.parse((i + 2).toString()),
+          amount: double.parse((i * 103.23).toString()),
           date: date));
     }
   }
@@ -89,7 +89,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Flutter Demo"),
+        title: Text("Expense manager"),
         actions: <Widget>[
           FlatButton(
             child: Text("Add"),

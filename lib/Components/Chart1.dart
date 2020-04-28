@@ -1,5 +1,6 @@
 import 'package:expense_tracker/Models/TransactionModel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:intl/intl.dart';
 
 class Chart1 extends StatelessWidget {
@@ -45,22 +46,45 @@ class Chart1 extends StatelessWidget {
   Widget build(BuildContext context) {
     print(_getGroupedTransactionValues[0]["day"]);
 
-    return Card(
-      elevation: 6,
-      margin: EdgeInsets.all(20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          ..._getGroupedTransactionValues.map((item) {
-            return Column(
-              children: <Widget>[
-                Text(item["amount"].toString()),
-                Text('%0'),
-                Text(item["day"])
-              ],
-            );
-          })
-        ],
+    return Container(
+      height: 150,
+      child: Card(
+        elevation: 6,
+        margin: EdgeInsets.all(20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            ..._getGroupedTransactionValues.map((item) {
+              return Padding(
+                padding: EdgeInsets.all(5),
+                child: Column(
+                  children: <Widget>[
+                    Flexible(
+                      fit: FlexFit.tight,
+                      child: FAProgressBar(
+                        progressColor: Theme.of(context).accentColor,
+                        verticalDirection: VerticalDirection.up,
+                        direction: Axis.vertical,
+                        currentValue:
+                            double.parse(item['percent'].toString()).toInt(),
+                        displayText: '%',
+                      ),
+                    ),
+                    Text(item["day"])
+                  ],
+                ),
+              );
+
+              // return Column(
+              //   children: <Widget>[
+              //     Text(item["amount"].toString()),
+              //     Text('%0'),
+              //     Text(item["day"])
+              //   ],
+              // );
+            })
+          ],
+        ),
       ),
     );
   }

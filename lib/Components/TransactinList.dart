@@ -1,53 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../Models/TransactionModel.dart';
 
 class TransactionList extends StatelessWidget {
   final List<TransactionModel> transactions;
 
-  TransactionList(this.transactions);
-
-  List<Card> getTransactionList() {
-    return transactions.map((tran) {
-      return Card(
-        elevation: 5,
-        child: Row(
-          children: <Widget>[
-            Container(
-                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.teal, width: 2)),
-                child: Text(
-                  tran.amount.toStringAsFixed(2),
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.teal,
-                      fontSize: 20),
-                )),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  tran.title,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "${tran.date.year.toString()}-${tran.date.month.toString().padLeft(2, '0')}-${tran.date.day.toString().padLeft(2, '0')}",
-                  style: TextStyle(fontSize: 10, color: Colors.grey),
-                )
-              ],
-            )
-          ],
-        ),
-      );
-    }).toList();
+  TransactionList(this.transactions) {
+    transactions.sort((a, b) {
+      return a.date.compareTo(b.date);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[...getTransactionList()],
+    return Container(
+      height: 300,
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: ListView.builder(
+          itemCount: transactions.length,
+          itemBuilder: (ctx, index) {
+            final item = transactions[index];
+            return Card(
+                elevation: 5,
+                child: ListTile(
+                    leading: CircleAvatar(
+                      child: FittedBox(
+                        child: Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Text(item.amount.toString())),
+                      ),
+                    ),
+                    title: Text(
+                      item.title,
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                    subtitle: Text(DateFormat.yMMMd().format(item.date),
+                        style: Theme.of(context).textTheme.subtitle)));
+          }),
     );
   }
 }
