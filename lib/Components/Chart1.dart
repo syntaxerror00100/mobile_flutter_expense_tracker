@@ -23,7 +23,8 @@ class Chart1 extends StatelessWidget {
 
       trans.forEach((i) => totalAmount += i.amount);
 
-      final double average = (totalAmount / overallTotal) * 100;
+      final double average =
+          overallTotal > 0 ? (totalAmount / overallTotal) * 100 : 0;
       // print(DateFormat.E().format(weekday));
       // print(totalAmount);
 
@@ -44,6 +45,7 @@ class Chart1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('================================');
     print(_getGroupedTransactionValues[0]["day"]);
 
     return Container(

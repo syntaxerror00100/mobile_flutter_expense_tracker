@@ -42,20 +42,20 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   _MyAppState() {
     //INITIALIZE DUMMY DATA
-    for (int i = 0; i < 7; i++) {
-      final date = new DateTime.now().subtract(Duration(days: i));
-      _transactions.add(new TransactionModel(
-          id: i.toString(),
-          title: 'Dummy data $i',
-          amount: double.parse(i.toString()),
-          date: date));
+    // for (int i = 0; i < 7; i++) {
+    //   final date = new DateTime.now().subtract(Duration(days: i));
+    //   _transactions.add(new TransactionModel(
+    //       id: i.toString(),
+    //       title: 'Dummy data $i',
+    //       amount: double.parse(i.toString()),
+    //       date: date));
 
-      _transactions.add(new TransactionModel(
-          id: i.toString(),
-          title: 'Another dummy data $i',
-          amount: double.parse((i * 103.23).toString()),
-          date: date));
-    }
+    //   _transactions.add(new TransactionModel(
+    //       id: i.toString(),
+    //       title: 'Another dummy data $i',
+    //       amount: double.parse((i * 103.23).toString()),
+    //       date: date));
+    // }
   }
 
   final List<TransactionModel> _transactions = [];
@@ -103,13 +103,7 @@ class _MyAppState extends State<MyApp> {
         children: <Widget>[
           Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             new Chart1(recentTransactions),
-            _transactions.length > 0
-                ? new TransactionList(this._transactions)
-                : Card(
-                    elevation: 5,
-                    child: Container(
-                        margin: EdgeInsets.all(10),
-                        child: Text("No transactions yet")))
+            TransactionList(this._transactions)
           ]),
         ],
       ),
