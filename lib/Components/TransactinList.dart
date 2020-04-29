@@ -5,8 +5,9 @@ import '../Models/TransactionModel.dart';
 
 class TransactionList extends StatelessWidget {
   final List<TransactionModel> transactions;
+  final Function fnDeleteTransactionHandler;
 
-  TransactionList(this.transactions) {
+  TransactionList(this.transactions, this.fnDeleteTransactionHandler) {
     // if (transactions.length > 0)
     //   transactions.sort((a, b) {
     //     return a.date.compareTo(b.date);
@@ -26,19 +27,52 @@ class TransactionList extends StatelessWidget {
                 return Card(
                     elevation: 5,
                     child: ListTile(
-                        leading: CircleAvatar(
-                          child: FittedBox(
-                            child: Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Text(item.amount.toString())),
-                          ),
+                      leading: CircleAvatar(
+                        child: FittedBox(
+                          child: Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Text(item.amount.toString())),
                         ),
-                        title: Text(
-                          item.title,
-                          style: Theme.of(context).textTheme.title,
+                      ),
+                      title: Text(
+                        item.title,
+                        style: Theme.of(context).textTheme.title,
+                      ),
+                      subtitle: Text(DateFormat.yMMMd().format(item.date),
+                          style: Theme.of(context).textTheme.subtitle),
+                      trailing: IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.red[400],
                         ),
-                        subtitle: Text(DateFormat.yMMMd().format(item.date),
-                            style: Theme.of(context).textTheme.subtitle)));
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext ctx) {
+                                return AlertDialog(
+                                  title: Text('Alert'),
+                                  content: Text(
+                                      'Are you sure you want to delete the selected transaction?'),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text('Ok'),
+                                      onPressed: () {
+                                        fnDeleteTransactionHandler(item.id);
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    )
+                                  ],
+                                );
+                              });
+                        },
+                      ),
+                    ));
               })
           : Text("No transactions yet"),
     );

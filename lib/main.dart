@@ -42,20 +42,20 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   _MyAppState() {
     //INITIALIZE DUMMY DATA
-    // for (int i = 0; i < 7; i++) {
-    //   final date = new DateTime.now().subtract(Duration(days: i));
-    //   _transactions.add(new TransactionModel(
-    //       id: i.toString(),
-    //       title: 'Dummy data $i',
-    //       amount: double.parse(i.toString()),
-    //       date: date));
+    for (int i = 0; i < 7; i++) {
+      final date = new DateTime.now().subtract(Duration(days: i));
+      _transactions.add(new TransactionModel(
+          id: i.toString(),
+          title: 'Dummy data $i',
+          amount: double.parse(i.toString()),
+          date: date));
 
-    //   _transactions.add(new TransactionModel(
-    //       id: i.toString(),
-    //       title: 'Another dummy data $i',
-    //       amount: double.parse((i * 103.23).toString()),
-    //       date: date));
-    // }
+      _transactions.add(new TransactionModel(
+          id: i.toString(),
+          title: 'Another dummy data $i',
+          amount: double.parse((i * 103.23).toString()),
+          date: date));
+    }
   }
 
   final List<TransactionModel> _transactions = [];
@@ -85,28 +85,46 @@ class _MyAppState extends State<MyApp> {
             addTransactionHandler: this.addTransactionHandler));
   }
 
+  void _deleteTransactionHandler(String id) {
+    setState(() {
+      _transactions.removeWhere((x) => x.id == id);
+    });
+  }
+
+  AppBar appBar(BuildContext ctx) {
+    return AppBar(
+      title: Text("Expense manager"),
+      actions: <Widget>[
+        FlatButton(
+          child: Text("Add"),
+          onPressed: () {
+            _startAddTransaction(ctx);
+          },
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final _appBar = appBar(context);
+
+    final double screenHeightLessShits = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.top -
+        _appBar.preferredSize.height;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Expense manager"),
-        actions: <Widget>[
-          FlatButton(
-            child: Text("Add"),
-            onPressed: () {
-              _startAddTransaction(context);
-            },
-          )
-        ],
-      ),
-      body: ListView(
-        children: <Widget>[
+      appBar: _appBar,
+      body:
           Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-            new Chart1(recentTransactions),
-            TransactionList(this._transactions)
-          ]),
-        ],
-      ),
+        Container(
+            height: screenHeightLessShits * .30,
+            child: new Chart1(recentTransactions)),
+        Container(
+            height: screenHeightLessShits * .7,
+            child:
+                TransactionList(this._transactions, _deleteTransactionHandler))
+      ]),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
