@@ -14,6 +14,33 @@ class TransactionList extends StatelessWidget {
     //   });
   }
 
+  void _confirmAndDeleteTransaction(BuildContext ctx, String id) {
+    showDialog(
+        context: ctx,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: Text('Alert'),
+            content: Text(
+                'Are you sure you want to delete the selected transaction?'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  fnDeleteTransactionHandler(id);
+                  Navigator.of(ctx).pop();
+                },
+              ),
+              FlatButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,38 +67,23 @@ class TransactionList extends StatelessWidget {
                       ),
                       subtitle: Text(DateFormat.yMMMd().format(item.date),
                           style: Theme.of(context).textTheme.subtitle),
-                      trailing: IconButton(
-                        icon: Icon(
-                          Icons.delete,
-                          color: Colors.red[400],
-                        ),
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext ctx) {
-                                return AlertDialog(
-                                  title: Text('Alert'),
-                                  content: Text(
-                                      'Are you sure you want to delete the selected transaction?'),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text('Ok'),
-                                      onPressed: () {
-                                        fnDeleteTransactionHandler(item.id);
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    FlatButton(
-                                      child: Text('Cancel'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    )
-                                  ],
-                                );
-                              });
-                        },
-                      ),
+                      trailing: MediaQuery.of(context).size.width > 450
+                          ? FlatButton.icon(
+                              onPressed: () {
+                                _confirmAndDeleteTransaction(context, item.id);
+                              },
+                              textColor: Theme.of(context).errorColor,
+                              icon: Icon(Icons.delete),
+                              label: Text('Delete'))
+                          : IconButton(
+                              icon: Icon(
+                                Icons.delete,
+                                color: Theme.of(context).errorColor,
+                              ),
+                              onPressed: () {
+                                _confirmAndDeleteTransaction(context, item.id);
+                              },
+                            ),
                     ));
               })
           : Text("No transactions yet"),

@@ -82,6 +82,8 @@ class _MyAppState extends State<MyApp> {
 
   void _startAddTransaction(BuildContext ctx) {
     showModalBottomSheet(
+        isScrollControlled:
+            MediaQuery.of(ctx).orientation == Orientation.landscape,
         context: ctx,
         builder: (_) => new NewtransactionForm(
             addTransactionHandler: this.addTransactionHandler));
