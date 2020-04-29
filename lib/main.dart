@@ -59,6 +59,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   final List<TransactionModel> _transactions = [];
+  bool _showChart = false;
+
   void addTransactionHandler(TransactionModel tranObj, BuildContext ctx) {
     setState(() {
       _transactions.add(new TransactionModel(
@@ -113,17 +115,37 @@ class _MyAppState extends State<MyApp> {
         MediaQuery.of(context).padding.top -
         _appBar.preferredSize.height;
 
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     return Scaffold(
       appBar: _appBar,
       body:
           Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-        Container(
-            height: screenHeightLessShits * .30,
-            child: new Chart1(recentTransactions)),
-        Container(
-            height: screenHeightLessShits * .7,
-            child:
-                TransactionList(this._transactions, _deleteTransactionHandler))
+        if (isLandscape)
+          Container(
+              child: Row(
+            children: <Widget>[
+              Switch(
+                value: _showChart,
+                onChanged: (val) {
+                  setState(() {
+                    _showChart = val;
+                  });
+                },
+              ),
+              Text('Show chart')
+            ],
+          )),
+        if (_showChart || !isLandscape)
+          Container(
+              height: screenHeightLessShits * (isLandscape ? .7 : .3),
+              child: new Chart1(recentTransactions)),
+        if (!_showChart || !isLandscape)
+          Container(
+              height: screenHeightLessShits * .7,
+              child: TransactionList(
+                  this._transactions, _deleteTransactionHandler))
       ]),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
