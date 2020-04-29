@@ -18,20 +18,20 @@ class _NewtransactionFormState extends State<NewtransactionForm> {
 
   final _dateController = TextEditingController();
 
-  var _selectedDate = "No date choosen";
+  DateTime _selectedDate = null;
 
   void _addTransaction(BuildContext ctx) {
     final String amount = _amountController.text;
     final String title = _titleController.text;
-    final String date = _selectedDate;
+    final DateTime date = _selectedDate;
 
-    if (title.isEmpty || amount.isEmpty || date.isEmpty) return;
+    if (title.isEmpty || amount.isEmpty || date == null) return;
 
     var newTransaction = new TransactionModel(
         id: DateTime.now().toString(),
         title: title,
         amount: double.parse(amount),
-        date: DateTime.parse(date));
+        date: date);
 
     widget.addTransactionHandler(newTransaction, ctx);
   }
@@ -54,7 +54,9 @@ class _NewtransactionFormState extends State<NewtransactionForm> {
                   hintText: "Input Amount", labelText: "Amount")),
           Row(
             children: <Widget>[
-              Text(_selectedDate),
+              Text(_selectedDate == null
+                  ? 'no selected date'
+                  : DateFormat.yMMMEd().format(_selectedDate).toString()),
               SizedBox(
                 width: 10,
               ),
@@ -69,9 +71,8 @@ class _NewtransactionFormState extends State<NewtransactionForm> {
                         .then((selectedDate) {
                       if (selectedDate != null)
                         setState(() {
-                          _selectedDate = DateFormat.yMMMEd()
-                              .format(selectedDate)
-                              .toString(); // selectedDate.toString();
+                          _selectedDate =
+                              selectedDate; // selectedDate.toString();
                         });
                     });
                   })
